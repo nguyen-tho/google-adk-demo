@@ -1,6 +1,7 @@
 from google.adk.agents.llm_agent import Agent
 import common_agent.AgentTools.timezone as tz_module
 import common_agent.AgentTools.location as loc_module
+import common_agent.AgentTools.weather as weather_module
 
 def get_current_time(city_name: str) -> str:
     """
@@ -52,10 +53,30 @@ def get_location_timezone(city_name: str) -> str:
     except ValueError as e:
         return {"status": "error", "message": str(e)}
 
+#weather tool 
+def get_current_weather(city_name: str, unit: str) -> dict:
+    """
+    Get the current weather for the specified city.
+
+    Args:
+        city_name (str): The name of the city.
+        unit (str, optional): The unit of measurement for temperature. Defaults to "metric".
+            there are some units: ["default/None", "metric", "imperial"].
+            with default unit is Kelvin, metric is Celsius, imperial is Fahrenheit.
+    Returns:
+        dict: A dictionary containing the weather information, or an error message if not found.
+    """
+    weather_tool = weather_module.WeatherTool(city_name)
+    weather_info = weather_tool.get_current_weather(unit)
+    if weather_info:
+        return {"status": "success", "weather": weather_info}
+    else:
+        return {"status": "error", "message": f"City '{city_name}' Not Found or Invalid API Key."}
+# Define the root agent with the above tools
 root_agent = Agent(
     model='gemini-2.5-flash',
     name='root_agent',
     description="Tells the current time in a specified city.",
-    instruction="You are a helpful assistant that tells the current time, location coordinate, and timezone in cities.",
-    tools=[get_current_time, get_location_coordinates, get_location_timezone],
+    instruction="You are a helpful assistant that tells the current time, location coordinate, timezone, and weather in cities.",
+    tools=[get_current_time, get_location_coordinates, get_location_timezone, get_current_weather],
 )

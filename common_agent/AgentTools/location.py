@@ -1,5 +1,6 @@
 from geopy.geocoders import Nominatim
 
+
 class Location: 
     def __init__(self, city_name: str):
         self.city_name = city_name
@@ -30,7 +31,7 @@ class Location:
         else:
             direction = 'E' if decimal_degree >= 0 else 'W'
         return f"{abs(degrees)}°{minutes}'{seconds:.2f}\" {direction}"
-        
+         
     def get_location_based_on_city(self):
         geolocator = Nominatim(user_agent="timezone_agent")
         location = geolocator.geocode(self.city_name)
