@@ -28,3 +28,30 @@ source ./.venv/Scripts/activate
 pip install google-adk
 #Requirement: python >=3.9 to install google-adk package
 ```
+
+- Step 4: create agent by google adk
+```sh
+adk create <your agent name>
+# you need to prepare google gemini API key and write it when you initialize your agent
+# when your agent was created, you have 3 files in your agent_name folder:
+# - .env: environment variables file
+# - _init_.py: initialized file
+# - agent.py: agent code file
+
+#for example:
+adk create common_agent # my agent
+```
+
+- Step 5: run agent
+```sh
+# run agent with your terminal
+adk run <your agent folder>
+
+# run agent with web UI
+adk web <your upper folder of your agent(s) folder>
+# when you run agent with web UI on your localhost the agent API will run on port 8000
+#localhost:8000 or 127.0.0.1:8000
+# on web UI we have a checklist to choose your agent please choooe your agant based on your agent_name folder
+```
+
+
