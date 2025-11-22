@@ -55,3 +55,7 @@ adk web <your upper folder of your agent(s) folder>
 ```
 
 
+Reference:
+
+- Learn more with official document: [Google ADK](https://google.github.io/adk-docs/)
+
