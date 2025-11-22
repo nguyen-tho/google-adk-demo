@@ -1,7 +1,13 @@
-from google.adk.agents.llm_agent import Agent
+from google.adk.agents.llm_agent import Agent, LlmAgent
+from google.adk.agents.parallel_agent import ParallelAgent
+from google.adk.agents.sequential_agent import SequentialAgent
 import common_agent.AgentTools.timezone as tz_module
 import common_agent.AgentTools.location as loc_module
 import common_agent.AgentTools.weather as weather_module
+from google.adk.runners import Runner
+from google.adk.sessions import InMemorySessionService
+from google.adk.tools import google_search
+
 
 def get_current_time(city_name: str) -> str:
     """
@@ -73,10 +79,40 @@ def get_current_weather(city_name: str, unit: str) -> dict:
     else:
         return {"status": "error", "message": f"City '{city_name}' Not Found or Invalid API Key."}
 # Define the root agent with the above tools
-root_agent = Agent(
-    model='gemini-2.5-flash',
-    name='root_agent',
+common_subagent = Agent(
+    model='gemini-2.0-flash',
+    name='common_tools_agent',
     description="Tells the current time in a specified city.",
     instruction="You are a helpful assistant that tells the current time, location coordinate, timezone, and weather in cities.",
     tools=[get_current_time, get_location_coordinates, get_location_timezone, get_current_weather],
 )
+
+google_subagent = Agent(
+        name="basic_search_agent",
+        model="gemini-2.0-flash",
+        description="Agent to answer questions using Google Search.",
+        instruction="I can answer your questions by searching the internet. Just ask me anything!",
+        # google_search is a pre-built tool which allows the agent to perform Google searches.
+        tools=[google_search])
+
+parallel_agents = ParallelAgent(
+    name="common_google_agent",
+    description="An agent that combines common tools and Google Search capabilities.",
+    sub_agents=[common_subagent, google_subagent])
+
+#merger agent is a LlmAgent that takes the outputs of the parallel agent and synthesizes them.
+merger_agent = LlmAgent(
+    name="SynthesisAgent",
+    model="gemini-2.0-flash",
+    description="An agent that synthesizes the results from the parallel research agent.",
+    instruction="You synthesize the information gathered by the parallel agent to provide a comprehensive answer.",
+)
+
+sequential_pipeline_agent  = SequentialAgent(
+     name="root_agent",
+     # Run parallel research first, then merge
+     sub_agents=[parallel_agents, merger_agent],
+     description="Coordinates parallel research and synthesizes the results."
+ )
+
+root_agent = sequential_pipeline_agent
