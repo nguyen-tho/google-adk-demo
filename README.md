@@ -26,7 +26,7 @@ source ./.venv/Scripts/activate
 - Step 3: install google-adk package
 ```sh
 pip install google-adk
-#Requirement: python >=3.9 to install google-adk package
+#Requirement: python >=3.10 to install google-adk package
 ```
 
 - Step 4: create agent by google adk
