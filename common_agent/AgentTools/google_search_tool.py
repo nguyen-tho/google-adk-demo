@@ -1,4 +1,3 @@
-from common_agent.AgentTools.tool_init import initialize_workflow_agent
 from common_agent.AgentTools.tool_init import initialize_agent_tools
 from google.adk.tools import google_search
 
@@ -18,12 +17,17 @@ def create_google_search_agent(model: str = "gemini-2.5-flash", type: str = "age
     agent_name = "GoogleSearchAgent"
     tools = [google_search]
     description = """
-    An agent that uses Google Search to answer questions.
-    It can search the web for information and provide accurate answers based on the search results.
+    The specialist agent for external information retrieval (Web Search Tool). 
+    Output is a structured JSON object containing raw snippets and sources. 
+    Must not translate or interpret the content found.
     """
-    instruction = """    You are a helpful assistant that answers questions using Google Search.
-    Use the Google Search tool to find relevant information and provide accurate answers.
-    Always cite your sources from the search results. """
+    instruction = """    You are the objective Information Retrieval Agent. 
+    Task: Use your Search Tool to answer the input query. 
+    Mandatory Output Constraint: You must return a single JSON structure following this exact schema. 
+    The search_snippets array must contain pairs of content (raw quote) and source (URL). 
+    {"type": "search_result", "status": "success", "query": "[Search query]", "search_snippets":
+    [{"content": "[Raw snippet content]", "source": "[URL]"}, {"content": "[Another raw snippet]", 
+    "source": "[Another URL]"}]}. """
     google_search_agent = initialize_agent_tools(agent_name=agent_name,
                                                  model=model,
                                                  type=type,
