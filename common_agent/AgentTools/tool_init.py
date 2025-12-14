@@ -90,5 +90,3 @@ def synthesis_agent(parallel_agent: ParallelAgent, sequential_agent: SequentialA
     return synthesized_agent
 
 
-
-    
