@@ -89,4 +89,22 @@ def synthesis_agent(parallel_agent: ParallelAgent, sequential_agent: SequentialA
     )
     return synthesized_agent
 
+def agent_hierachy(sub_agents: list[Agent], agent_name, description, model ='gemini-2.5-flash') ->LlmAgent:
+    """
+    Create a hierarchical LlmAgent that manages multiple sub-agents.
+
+    Args:
+        sub_agents (list[Agent]): List of sub-agents to be managed by the hierarchical agent.
+
+    Returns:
+        LlmAgent: A hierarchical LlmAgent that oversees the sub-agents.
+    """
+    hierachy_agent = LlmAgent(
+        name=agent_name,
+        model=model,
+        description=description,
+        sub_agents=sub_agents
+    )
+    return hierachy_agent
+
 
