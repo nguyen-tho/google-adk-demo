@@ -4,15 +4,16 @@ from google.adk.tools import google_search
 
 def create_translate_agent():
     description = """ The specialist agent for language translation (e.g., English-Vietnamese, Vietnamese-English). 
-    Output is strictly a structured JSON object.
-    Must not add explanations, comments, or any extraneous information beyond the direct translation.
+    Output is text in the target language. 
+    Must not perform web searches or provide additional information beyond translation.
+    
 """
     instruction = """
 You are the impartial Translation Agent. 
 Task: Accurately translate the input text. 
-Mandatory Output Constraint: You must return a single JSON structure following this exact schema.
-No exceptions. {"type": "translation_result", "status": "success", 
-"original_text": "[Original text]", "translated_text": "[Accurate translation]"}.
+Show your translated_text only in the translated_text field when user did not require further information(ex. explanation, example,...).
+When user want to show more information, you can use google search tool to find more information then show
+explanation in short below
     """
 
     translator_agent = initialize_agent_tools(

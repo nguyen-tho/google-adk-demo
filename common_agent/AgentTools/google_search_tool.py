@@ -1,7 +1,7 @@
 from common_agent.AgentTools.tool_init import initialize_agent_tools
 from google.adk.tools import google_search
 
-def create_google_search_agent(model: str = "gemini-2.5-flash", type: str = "agent"):
+def create_google_search_agent(model: str = "gemini-2.5-flash", type: str = "llm"):
     """
     Create a Google Search agent with the specified parameters.
 
